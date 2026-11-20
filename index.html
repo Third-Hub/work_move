@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>업무이동 문구 v1.18</title>
+<title>업무이동 문구 v1.19</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2b6df6">
 <link rel="icon" href="icon-192.png">
@@ -28,7 +28,7 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 .mr{display:flex;gap:8px;align-items:center;margin-bottom:8px}.mr>b{flex:0 0 40px}
 .mr input{flex:1;min-width:0}.mr button{width:auto;flex:0 0 56px;padding:10px 4px;background:var(--card);color:var(--fg);border:1px solid var(--bd)}.mr button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 </style></head><body>
-<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b>업무이동 문구</b><span style="color:var(--mu);font-size:13px">v1.18</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b>업무이동 문구</b><span style="color:var(--mu);font-size:13px">v1.19</span></div>
 <button id="inst" class="s" hidden style="margin-bottom:8px">📲 홈 화면에 앱으로 설치</button>
 <div class="c"><h2>1. 월별 엑셀</h2>
 <input type="file" id="f" accept=".xlsx,.xlsm">
@@ -55,6 +55,8 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 <div class="c"><h2>4. 문구 (아래 칸은 직접 수정도 가능)</h2>
 <div class="r"><input id="org" placeholder="완료한 곳 (비우면 문구만)"><select id="stt" style="flex:0 0 110px"><option>납품 완료</option><option>설치 완료</option><option>회수 완료</option><option>전달 완료</option><option>AS 완료</option></select></div>
 <select id="en" style="margin-bottom:8px"></select>
+<div id="etw" hidden style="margin-bottom:8px"><div class="r"><button class="s" id="em">−10분</button><input type="time" id="eta"><button class="s" id="ep">+10분</button></div>
+<label style="font-size:14px;display:block"><input type="checkbox" id="nv" style="width:auto;margin-right:6px">네비상 (네비게이션 기준)</label></div>
 <input id="nx" list="dl" placeholder="다음 목적지" style="margin-bottom:8px"><datalist id="dl"></datalist>
 <input id="cu" placeholder="직접 입력할 문구 (예: 복귀중 주유하겠습니다.)" style="margin-bottom:8px" hidden>
 <textarea id="out"></textarea>
@@ -88,6 +90,7 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 <details style="margin-top:8px"><summary style="cursor:pointer;font-size:13px;color:var(--mu)">최근 기록 보기</summary><div id="lgl" style="font-size:12px;white-space:pre-wrap;margin-top:6px"></div></details>
 <button class="s" id="ld" style="margin-top:8px;font-size:13px;padding:6px">내보낸 기록 지우기</button></div>
 <details class="c"><summary style="cursor:pointer;color:var(--mu);font-size:13px">변경 내역</summary><div style="font-size:13px;color:var(--mu);margin-top:6px">
+<b>v1.19</b> 복귀예정시간 문구 추가 (차량번호 + 복귀예정시간 ○시○○분입니다., 시각 ±10분 조절, 네비상 옵션)<br>
 <b>v1.18</b> "복귀중 현장 퇴근하겠습니다." · "복귀중 식사후 현장 퇴근하겠습니다."도 복귀했습니다.처럼 단독 문구로 나오게 수정<br>
 <b>v1.17</b> 앱 설치(PWA) 지원: manifest·서비스워커·아이콘 추가, 설치 버튼, 오프라인 실행(엑셀 읽기 라이브러리 저장), 설치 상태 표시<br>
 <b>v1.16</b> 기록 내보내기: 형식 선택(JSON/CSV) + 저장·공유·내용 복사 버튼 분리, 공유가 안 될 때 저장으로 대체<br>
@@ -219,11 +222,14 @@ function list(){
     else{const j=i+(a==='up'?-1:1);if(j<0||j>=ST.length)return;[ST[i],ST[j]]=[ST[j],ST[i]];saveMg();idx=j;list();pick()}});
 }
 function enOpts(sel){
-  const lab={'이동':'이동하겠습니다','직접':'✎ 직접 입력'};
-  const all=['이동','출발하겠습니다.','복귀하겠습니다.','복귀했습니다.','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.','숙소 이동하여 업무 마무리하겠습니다.','대기하겠습니다.'].concat(LG('ph')||[],['직접']);
+  const lab={'이동':'이동하겠습니다','복귀예정':'복귀예정시간 알림 (시각 선택)','직접':'✎ 직접 입력'};
+  const all=['이동','출발하겠습니다.','복귀하겠습니다.','복귀했습니다.','복귀예정','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.','숙소 이동하여 업무 마무리하겠습니다.','대기하겠습니다.'].concat(LG('ph')||[],['직접']);
   $('en').innerHTML=all.map(x=>`<option value="${x}">${lab[x]||x}</option>`).join('');
   if(sel)$('en').value=sel;
 }
+function defEta(){const d=new Date(Date.now()+3600000);let m=Math.ceil(d.getMinutes()/10)*10,h=d.getHours();if(m===60){m=0;h=(h+1)%24}return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}
+function shiftEta(dm){const[h,m]=($('eta').value||defEta()).split(':').map(Number),t=(h*60+m+dm+1440)%1440;$('eta').value=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');compose()}
+$('em').onclick=()=>shiftEta(-10);$('ep').onclick=()=>shiftEta(10);
 var enManual=false;
 function repKey(){return $('sh').value+'|'+$('nm').value}
 function autoEn(){
@@ -262,8 +268,10 @@ $('kc').onclick=()=>{const h=kmh();delete h[$('car').value];LS('kmh',h);chk()};
 function compose(){
   chk();
   const tail=`-${[$('nm').value,$('nm2').value].filter(x=>x&&x!=='__new').join(', ')}(${$('car').value==='__new'?'':$('car').value}-${$('km').value.trim()})`,o=$('org').value.trim(),nx=$('nx').value.trim(),en=$('en').value;
-  $('cu').hidden=en!=='직접';
+  $('cu').hidden=en!=='직접';$('etw').hidden=en!=='복귀예정';
+  if(en==='복귀예정'&&!$('eta').value)$('eta').value=defEta();
   if(ARR){$('out').value=`복귀했습니다.\n${tail}`;return}
+  if(en==='복귀예정'){const[h,m]=$('eta').value.split(':');$('out').value=`${$('car').value}${$('nv').checked?' 네비상':''}\n복귀예정시간 ${+h}시${m}분입니다.`;return}
   if(['복귀했습니다.','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.'].includes(en)){$('out').value=`${en}\n${tail}`;return}
   if(en==='출발하겠습니다.'||en==='대기하겠습니다.'){$('out').value=`${o?o+' ':''}${en}\n${tail}`;return}
   const end=en==='이동'?`${nx||'(다음 목적지)'} 이동하겠습니다.`:en==='직접'?$('cu').value.trim():en;
@@ -283,7 +291,7 @@ $('xb').onclick=()=>{let v=$('xi').value.trim();if(!v)return;
   if(XK==='car'){v=pad(v);const x=LG('xc')||[];if(!x.includes(v)){x.push(v);LS('xc',x)}fillCar(v);const c=LG('cars')||{};c[$('nm').value]=v;LS('cars',c)}
   else{const x=LG('xn')||[];if(!x.includes(v)){x.push(v);LS('xn',x)}if(XK==='nm')fillNames(v);else fill2(v)}
   $('xr').hidden=true;compose()};
-['org','stt','nx','km','en','cu'].forEach(i=>$(i).oninput=()=>{if(i==='en')enManual=true;if(i==='km'){LS('km',$('km').value);if(!enManual)enOpts(autoEn())}compose()});
+['org','stt','nx','km','en','cu','eta','nv'].forEach(i=>$(i).oninput=()=>{if(i==='en')enManual=true;if(i==='km'){LS('km',$('km').value);if(!enManual)enOpts(autoEn())}compose()});
 $('cp').onclick=async()=>{saveKm();const en0=$('en').value,t=$('out').value,p=$('cu').value.trim();
   if($('en').value==='직접'&&p){const a=LG('ph')||[];if(!a.includes(p)){a.push(p);LS('ph',a)}enOpts(p);$('cu').value='';compose();$('out').value=t}
   try{await navigator.clipboard.writeText(t)}catch(e){$('out').select();document.execCommand('copy')}
@@ -407,7 +415,7 @@ function buildLog(fmt){
     const cols=['ts','t','sheet','date','name','name2','car','km','org','st','en','nx','text'],q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
     body='\ufeff'+[cols.join(',')].concat(L.map(e=>cols.map(c=>q(e[c])).join(','))).join('\r\n');type='text/csv';ext='csv';
   }else{
-    body=JSON.stringify({app:'업무이동 문구',version:'1.18',schema:1,name:me,month:ym,exported:stamp(),entries:L},null,1);type='application/json';ext='json';
+    body=JSON.stringify({app:'업무이동 문구',version:'1.19',schema:1,name:me,month:ym,exported:stamp(),entries:L},null,1);type='application/json';ext='json';
   }
   return{ym,body,type,fn:`업무로그_${me}_${ym}.${ext}`};
 }
