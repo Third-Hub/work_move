@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>업무이동 문구 v1.18</title>
+<title>업무이동 문구 v1.21</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2b6df6">
 <link rel="icon" href="icon-192.png">
@@ -27,8 +27,9 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 .sg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.sg button{width:auto;flex:1;min-width:80px;background:var(--card);color:var(--fg);border:1px solid var(--bd);padding:8px 6px;font-size:14px}.sg button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .mr{display:flex;gap:8px;align-items:center;margin-bottom:8px}.mr>b{flex:0 0 40px}
 .mr input{flex:1;min-width:0}.mr button{width:auto;flex:0 0 56px;padding:10px 4px;background:var(--card);color:var(--fg);border:1px solid var(--bd)}.mr button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+#cat button{min-width:0;padding:8px 4px;font-size:14px}
 </style></head><body>
-<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b>업무이동 문구</b><span style="color:var(--mu);font-size:13px">v1.18</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><b>업무이동 문구</b><span style="color:var(--mu);font-size:13px">v1.21</span></div>
 <button id="inst" class="s" hidden style="margin-bottom:8px">📲 홈 화면에 앱으로 설치</button>
 <div class="c"><h2>1. 월별 엑셀</h2>
 <input type="file" id="f" accept=".xlsx,.xlsm">
@@ -54,7 +55,13 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 
 <div class="c"><h2>4. 문구 (아래 칸은 직접 수정도 가능)</h2>
 <div class="r"><input id="org" placeholder="완료한 곳 (비우면 문구만)"><select id="stt" style="flex:0 0 110px"><option>납품 완료</option><option>설치 완료</option><option>회수 완료</option><option>전달 완료</option><option>AS 완료</option></select></div>
+<div class="sg" id="cat"></div>
 <select id="en" style="margin-bottom:8px"></select>
+<div id="etw" hidden style="margin-bottom:8px"><div class="r"><button class="s" id="em">−10분</button><input type="time" id="eta"><button class="s" id="ep">+10분</button></div>
+<label style="font-size:14px;display:block"><input type="checkbox" id="nv" style="width:auto;margin-right:6px">네비상 (네비게이션 기준)</label></div>
+<div id="pw1" hidden style="margin-bottom:8px"><select id="ws" style="margin-bottom:8px"></select><div id="wl"></div></div>
+<div id="pw2" hidden style="margin-bottom:8px"><input id="wt" placeholder="품목 / 기관 (예: KCS)"></div>
+<div id="pc" hidden style="margin-bottom:8px"><select id="cs" style="margin-bottom:8px"></select><div class="r"><input id="cgt" inputmode="decimal" placeholder="톤수 (예: 2.5)" style="flex:0 0 110px"><textarea id="cgo" placeholder="기관 (한 줄에 하나)" style="min-height:64px"></textarea></div></div>
 <input id="nx" list="dl" placeholder="다음 목적지" style="margin-bottom:8px"><datalist id="dl"></datalist>
 <input id="cu" placeholder="직접 입력할 문구 (예: 복귀중 주유하겠습니다.)" style="margin-bottom:8px" hidden>
 <textarea id="out"></textarea>
@@ -88,6 +95,9 @@ textarea{min-height:90px}.rw{display:flex;justify-content:space-between;gap:6px;
 <details style="margin-top:8px"><summary style="cursor:pointer;font-size:13px;color:var(--mu)">최근 기록 보기</summary><div id="lgl" style="font-size:12px;white-space:pre-wrap;margin-top:6px"></div></details>
 <button class="s" id="ld" style="margin-top:8px;font-size:13px;padding:6px">내보낸 기록 지우기</button></div>
 <details class="c"><summary style="cursor:pointer;color:var(--mu);font-size:13px">변경 내역</summary><div style="font-size:13px;color:var(--mu);margin-top:6px">
+<b>v1.21</b> 화물 목록에 오늘 시트와 다음 날 시트의 화물건을 함께 표시(상차·도착 시각 포함), 엑셀 읽기 보강: 화물 표기가 차량·사람1·사람2 칸 어디에 있어도 인식, 사람 칸의 메모(혼자 먼저·영남지사·상차 시각 등)와 차량 칸의 글자를 인원·차량으로 읽지 않음<br>
+<b>v1.20</b> 마무리 선택을 2단계로(이동·출발 / 복귀 / 원흥 / 화물 / 직접), 원흥 상차 완료(다음 일정 시트의 위메이드 목록)·전달·하차, 화물 하차 완료(월별 화물건), 화물 칸을 인원으로 읽던 문제 수정, 새 버전 자동 반영<br>
+<b>v1.19</b> 복귀예정시간 문구 추가 (차량번호 + 복귀예정시간 ○시○○분입니다., 시각 ±10분 조절, 네비상 옵션)<br>
 <b>v1.18</b> "복귀중 현장 퇴근하겠습니다." · "복귀중 식사후 현장 퇴근하겠습니다."도 복귀했습니다.처럼 단독 문구로 나오게 수정<br>
 <b>v1.17</b> 앱 설치(PWA) 지원: manifest·서비스워커·아이콘 추가, 설치 버튼, 오프라인 실행(엑셀 읽기 라이브러리 저장), 설치 상태 표시<br>
 <b>v1.16</b> 기록 내보내기: 형식 선택(JSON/CSV) + 저장·공유·내용 복사 버튼 분리, 공유가 안 될 때 저장으로 대체<br>
@@ -123,15 +133,17 @@ function parse(wb){
   wb.SheetNames.filter(n=>/^\d{1,2}\.\d{1,2}$/.test(n)).forEach(n=>{
     const ws=wb.Sheets[n],rg=XLSX.utils.decode_range(ws['!ref']||'A1');
     const v=(r,c)=>{const x=ws[XLSX.utils.encode_cell({r,c})];return x&&x.v!=null?String(x.v).trim():''};
-    const fill={};
+    const fill={},mo={};
     (ws['!merges']||[]).forEach(m=>{const t=v(m.s.r,m.s.c);
-      for(let r=m.s.r;r<=m.e.r;r++)for(let c=m.s.c;c<=m.e.c;c++)fill[r+','+c]=t});
+      for(let r=m.s.r;r<=m.e.r;r++)for(let c=m.s.c;c<=m.e.c;c++){fill[r+','+c]=t;mo[r+','+c]=m.s.r+','+m.s.c}});
     const g=(r,c)=>(r+','+c) in fill?fill[r+','+c]:v(r,c);
     const rows=[],roster=[];let r=3;
     for(;r<=rg.e.r;r++){
       let any=false;for(let c=0;c<=10;c++)if(v(r,c)){any=true;break}
       if(!any)break;
-      rows.push({car:g(r,0),p:[g(r,1),g(r,2)],eno:g(r,4),org:g(r,5),note:g(r,10)});
+      const A=g(r,0),Bv=g(r,1),Cv=g(r,2),cc=[A,Bv,Cv].findIndex(x=>/화물/.test(x)),cg=cc>=0,ct=cg?[A,Bv,Cv][cc]:'';
+      rows.push({car:/^\d+$/.test(A)?A:'',p:[/[\r\n]|상차|하차|화물/.test(Bv)?'':Bv,cg||/[\r\n]/.test(Cv)?'':Cv],eno:g(r,4),org:g(r,5),note:g(r,10),cm:v(r,6),cq:v(r,7),mm:v(r,8),mq:v(r,9),
+        cg:cg?(mo[r+','+cc]||r+','+cc):'',ton:cg?((ct.match(/([\d.]+)\s*T/i)||[])[1]||''):'',dt:cg?(cc===0?Bv+' '+Cv:g(r,3)).replace(/[\r\n]+/g,' ').trim():''});
     }
     for(;r<=rg.e.r;r++){
       const a=v(r,0),b=v(r,1);
@@ -139,6 +151,9 @@ function parse(wb){
     }
     out[n]={rows,roster};
   });
+  const ok=n=>/^[가-힣]{2,4}$/.test(n)&&!/지사|본사|사무실/.test(n),known=new Set(LG('xn')||[]);
+  Object.values(out).forEach(s=>{s.rows.forEach(r=>{if(ok(r.p[0]))known.add(r.p[0])});s.roster.forEach(x=>{if(ok(x.name))known.add(x.name)})});
+  Object.values(out).forEach(s=>s.rows.forEach(r=>{if(r.p[1]&&!known.has(r.p[1]))r.p[1]=''}));   // 사람2 칸의 메모는 인원에서 제외
   return out;
 }
 function load(db,label){
@@ -218,12 +233,57 @@ function list(){
     if(a==='mg')merge(i);else if(a==='sp')split(i);
     else{const j=i+(a==='up'?-1:1);if(j<0||j>=ST.length)return;[ST[i],ST[j]]=[ST[j],ST[i]];saveMg();idx=j;list();pick()}});
 }
+const CATS=[['go','이동·출발',['이동','출발하겠습니다.','대기하겠습니다.']],
+ ['back','복귀',['복귀하겠습니다.','복귀했습니다.','복귀예정','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.','숙소 이동하여 업무 마무리하겠습니다.']],
+ ['wm','원흥',['원흥상차','원흥전달','원흥하차']],['cg','화물',['화물하차']],['cu','직접',[]]];
+const LAB={'이동':'이동하겠습니다','복귀예정':'복귀예정시간 알림 (시각 선택)','원흥상차':'원흥 상차 완료 (목록)','원흥전달':'원흥 전달 완료','원흥하차':'원흥 하차 완료','화물하차':'화물 하차 완료 (월별 화물건)','직접':'✎ 직접 입력'};
+const STAND=['복귀했습니다.','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.','복귀예정','원흥상차','원흥전달','원흥하차','화물하차'];
+var CAT='go',wsT=false,CG=[];
+const catOf=v=>{for(const[k,,l]of CATS)if(l.includes(v))return k;return 'cu'};
 function enOpts(sel){
-  const lab={'이동':'이동하겠습니다','직접':'✎ 직접 입력'};
-  const all=['이동','출발하겠습니다.','복귀하겠습니다.','복귀했습니다.','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.','숙소 이동하여 업무 마무리하겠습니다.','대기하겠습니다.'].concat(LG('ph')||[],['직접']);
-  $('en').innerHTML=all.map(x=>`<option value="${x}">${lab[x]||x}</option>`).join('');
-  if(sel)$('en').value=sel;
+  if(sel)CAT=catOf(sel);
+  $('cat').innerHTML=CATS.map(([k,t])=>`<button data-k="${k}" class="${k===CAT?'on':''}">${t}</button>`).join('');
+  $('cat').querySelectorAll('button').forEach(b=>b.onclick=()=>{CAT=b.dataset.k;enManual=true;enOpts();prep();compose()});
+  const items=CAT==='cu'?(LG('ph')||[]).concat(['직접']):CATS.find(c=>c[0]===CAT)[2];
+  $('en').innerHTML=items.map(x=>`<option value="${x}">${LAB[x]||x}</option>`).join('');
+  if(sel&&items.includes(sel))$('en').value=sel;
 }
+function prep(){const e=$('en').value;if(e==='원흥상차')buildWm();else if(e==='화물하차')buildCg()}
+const vv=k=>{const[m,d]=k.split('.').map(Number);return m*100+d};
+function nextSheet(){const n=new Date(),t=(n.getMonth()+1)*100+n.getDate(),c=Object.keys(DB).filter(k=>vv(k)>t).sort((a,b)=>vv(a)-vv(b));return c[0]||$('sh').value}
+function wmItems(sheet){
+  const out=[];((DB[sheet]||{rows:[]}).rows).filter(r=>r.org&&/위메이드/.test(r.org)).forEach(r=>{
+    const l=out[out.length-1],g=l&&l.raw===r.org?l:(out.push({raw:r.org,it:[],st:0}),out[out.length-1]);
+    const cq=+r.cq||0,mq=+r.mq||0,cm=(r.cm||'').split('\n')[0].trim(),mm=(r.mm||'').split('\n')[0].trim();
+    if(cm&&cq)g.it.push((/^RTM/i.test(cm)?'PC ':'')+cm+' '+cq+'EA');
+    if(mm&&mq)g.it.push(mm+' '+mq+'EA');
+    if(/멀티스탠드/.test(r.note||''))g.st+=mq});
+  return out.map(g=>{const org=g.raw.replace(/\s*-\s*위메이드\s*$/,'').replace(/^\(재\)\s*/,'');
+    if(g.st)g.it.push('멀티스탠드 '+g.st+'EA');return g.it.length?`${org} - ${g.it.join(' / ')}`:org});
+}
+function buildWm(){
+  const ks=Object.keys(DB);
+  if($('ws').options.length!==ks.length)$('ws').innerHTML=ks.map(k=>`<option>${k}</option>`).join('');
+  if(!wsT&&ks.length)$('ws').value=nextSheet();
+  const L=wmItems($('ws').value);
+  $('wl').innerHTML=L.length?L.map(t=>`<label class="st" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" checked data-t="${t.replace(/"/g,'&quot;')}" style="width:auto;margin-top:4px">${t}</label>`).join(''):'<small>이 날짜 시트에 위메이드 건이 없습니다. (엑셀을 다시 불러왔는지 확인하세요)</small>';
+  $('wl').querySelectorAll('input').forEach(i=>i.onchange=compose);
+}
+function cgGroups(sheet){const out=[];((DB[sheet]||{rows:[]}).rows).forEach(r=>{if(!r.cg)return;
+  let g=out.find(x=>x.id===r.cg);if(!g){g={id:r.cg,ton:r.ton,orgs:[],names:[],dt:'',sh:sheet};out.push(g)}
+  if(!g.dt&&r.dt)g.dt=r.dt;
+  if(r.org&&!g.orgs.includes(r.org))g.orgs.push(r.org);r.p.forEach(n=>{if(n&&!g.names.includes(n))g.names.push(n)})});return out}
+function buildCg(){
+  CG=cgGroups($('sh').value);const ns=nextSheet();if(ns!==$('sh').value)CG=CG.concat(cgGroups(ns));const me=$('nm').value;
+  $('cs').innerHTML=CG.map((g,i)=>`<option value="${i}">[${g.sh}] ${g.names.join(', ')||'담당 미기재'} · ${g.ton?g.ton+'톤 · ':''}${g.orgs.join(' / ')}${g.dt?' ('+g.dt+')':''}</option>`).join('')+'<option value="-1">직접 입력</option>';
+  const j=CG.findIndex(g=>g.names.includes(me));$('cs').value=String(j>=0?j:(CG.length?0:-1));fillCg();
+}
+function fillCg(){const g=CG[+$('cs').value];$('cgt').value=g?g.ton:'';$('cgo').value=g?g.orgs.join('\n'):'';compose()}
+$('cs').onchange=fillCg;$('cgt').oninput=$('cgo').oninput=$('wt').oninput=()=>compose();
+$('ws').onchange=()=>{wsT=true;buildWm();compose()};
+function defEta(){const d=new Date(Date.now()+3600000);let m=Math.ceil(d.getMinutes()/10)*10,h=d.getHours();if(m===60){m=0;h=(h+1)%24}return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}
+function shiftEta(dm){const[h,m]=($('eta').value||defEta()).split(':').map(Number),t=(h*60+m+dm+1440)%1440;$('eta').value=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');compose()}
+$('em').onclick=()=>shiftEta(-10);$('ep').onclick=()=>shiftEta(10);
 var enManual=false;
 function repKey(){return $('sh').value+'|'+$('nm').value}
 function autoEn(){
@@ -262,8 +322,14 @@ $('kc').onclick=()=>{const h=kmh();delete h[$('car').value];LS('kmh',h);chk()};
 function compose(){
   chk();
   const tail=`-${[$('nm').value,$('nm2').value].filter(x=>x&&x!=='__new').join(', ')}(${$('car').value==='__new'?'':$('car').value}-${$('km').value.trim()})`,o=$('org').value.trim(),nx=$('nx').value.trim(),en=$('en').value;
-  $('cu').hidden=en!=='직접';
+  $('cu').hidden=en!=='직접';$('etw').hidden=en!=='복귀예정';
+  $('pw1').hidden=en!=='원흥상차';$('pw2').hidden=!(en==='원흥전달'||en==='원흥하차');$('pc').hidden=en!=='화물하차';
+  if(en==='복귀예정'&&!$('eta').value)$('eta').value=defEta();
   if(ARR){$('out').value=`복귀했습니다.\n${tail}`;return}
+  if(en==='원흥상차'){$('out').value=['원흥 상차 완료.',...[...document.querySelectorAll('#wl input:checked')].map(i=>i.dataset.t)].join('\n');return}
+  if(en==='원흥전달'||en==='원흥하차'){const x=$('wt').value.trim();$('out').value=`${x?x+' ':''}원흥 ${en==='원흥전달'?'전달':'하차'} 완료.`;return}
+  if(en==='화물하차'){const o=$('cgo').value.split('\n').map(s=>s.trim()).filter(Boolean),t=$('cgt').value.trim(),e2=`${t?t+'톤 ':''}화물 하차 완료.`;$('out').value=o.length>1?o.join('\n')+'\n'+e2:(o[0]?o[0]+' ':'')+e2;return}
+  if(en==='복귀예정'){const[h,m]=$('eta').value.split(':');$('out').value=`${$('car').value}${$('nv').checked?' 네비상':''}\n복귀예정시간 ${+h}시${m}분입니다.`;return}
   if(['복귀했습니다.','복귀중 현장 퇴근하겠습니다.','복귀중 식사후 현장 퇴근하겠습니다.'].includes(en)){$('out').value=`${en}\n${tail}`;return}
   if(en==='출발하겠습니다.'||en==='대기하겠습니다.'){$('out').value=`${o?o+' ':''}${en}\n${tail}`;return}
   const end=en==='이동'?`${nx||'(다음 목적지)'} 이동하겠습니다.`:en==='직접'?$('cu').value.trim():en;
@@ -283,7 +349,7 @@ $('xb').onclick=()=>{let v=$('xi').value.trim();if(!v)return;
   if(XK==='car'){v=pad(v);const x=LG('xc')||[];if(!x.includes(v)){x.push(v);LS('xc',x)}fillCar(v);const c=LG('cars')||{};c[$('nm').value]=v;LS('cars',c)}
   else{const x=LG('xn')||[];if(!x.includes(v)){x.push(v);LS('xn',x)}if(XK==='nm')fillNames(v);else fill2(v)}
   $('xr').hidden=true;compose()};
-['org','stt','nx','km','en','cu'].forEach(i=>$(i).oninput=()=>{if(i==='en')enManual=true;if(i==='km'){LS('km',$('km').value);if(!enManual)enOpts(autoEn())}compose()});
+['org','stt','nx','km','en','cu','eta','nv'].forEach(i=>$(i).oninput=()=>{if(i==='en'){enManual=true;prep()}if(i==='km'){LS('km',$('km').value);if(!enManual)enOpts(autoEn())}compose()});
 $('cp').onclick=async()=>{saveKm();const en0=$('en').value,t=$('out').value,p=$('cu').value.trim();
   if($('en').value==='직접'&&p){const a=LG('ph')||[];if(!a.includes(p)){a.push(p);LS('ph',a)}enOpts(p);$('cu').value='';compose();$('out').value=t}
   try{await navigator.clipboard.writeText(t)}catch(e){$('out').select();document.execCommand('copy')}
@@ -390,8 +456,8 @@ function addLog(e){
   if(l&&l.t===e.t&&l.text===e.text&&Date.now()-l.id<120000)return;   // 같은 문구 연속 복사는 1건만
   e.id=Date.now();e.ts=stamp();L.push(e);LS('log',L);lgUI();
 }
-function logMove(text,en0){const k=$('km').value.trim();
-  addLog({t:'move',sheet:$('sh').value,name:$('nm').value,name2:$('nm2').value,car:$('car').value,km:/^\d+$/.test(k)?+k:null,org:$('org').value.trim(),st:$('stt').value,en:en0,nx:$('nx').value.trim(),text})}
+function logMove(text,en0){const k=$('km').value.trim(),sa=STAND.includes(en0);
+  addLog({t:'move',sheet:$('sh').value,name:$('nm').value,name2:$('nm2').value,car:$('car').value,km:/^\d+$/.test(k)?+k:null,org:sa?null:$('org').value.trim(),st:sa?null:$('stt').value,en:en0,nx:sa?null:$('nx').value.trim(),text})}
 function logCost(text){
   addLog({t:'cost',sheet:$('sh').value,date:$('cd').value.trim(),name:$('nm').value,name2:$('nm2').value,text,blocks:JSON.parse(JSON.stringify(B)).map(b=>{delete b.dirty;return b})})}
 function lgUI(){
@@ -407,7 +473,7 @@ function buildLog(fmt){
     const cols=['ts','t','sheet','date','name','name2','car','km','org','st','en','nx','text'],q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
     body='\ufeff'+[cols.join(',')].concat(L.map(e=>cols.map(c=>q(e[c])).join(','))).join('\r\n');type='text/csv';ext='csv';
   }else{
-    body=JSON.stringify({app:'업무이동 문구',version:'1.18',schema:1,name:me,month:ym,exported:stamp(),entries:L},null,1);type='application/json';ext='json';
+    body=JSON.stringify({app:'업무이동 문구',version:'1.21',schema:1,name:me,month:ym,exported:stamp(),entries:L},null,1);type='application/json';ext='json';
   }
   return{ym,body,type,fn:`업무로그_${me}_${ym}.${ext}`};
 }
@@ -446,12 +512,14 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;$('inst').hi
 addEventListener('appinstalled',()=>{dip=null;$('inst').hidden=true;pw()});
 $('inst').onclick=async()=>{if(!dip)return;dip.prompt();try{await dip.userChoice}catch(e){}dip=null;$('inst').hidden=true;pw()};
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){
+  const had=!!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('./sw.js').then(()=>navigator.serviceWorker.ready).then(pw).catch(pw);
-  navigator.serviceWorker.addEventListener('controllerchange',pw);
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{pw();if(had&&!window.__rl){window.__rl=1;location.reload()}});
 }
 pw();
 enOpts('복귀하겠습니다.');
-const saved=LG('db2');if(saved&&Object.keys(saved).length)load(saved,LG('dbName')||'');
+const saved=LG('db2');if(saved&&Object.keys(saved).length){load(saved,LG('dbName')||'');
+  const r0=(saved[Object.keys(saved)[0]].rows||[])[0];if(r0&&!('cm' in r0))$('fi').textContent+=' ⚠ 새 기능(원흥 상차·화물)을 쓰려면 엑셀을 다시 불러오세요';}
 const lk=LG('km');if(lk)$('km').placeholder='지난번 '+lk;
 tab(LG('tab')===2?2:1);
 </script></body></html>
